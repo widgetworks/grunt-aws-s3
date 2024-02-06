@@ -59,7 +59,7 @@ module.exports = function (grunt) {
 
 		// Replace the AWS SDK by the mock package if we're testing
 		if (options.mock) {
-			AWS = require('mock-aws-s3');
+			AWS = require('@wiwo/mock-aws-s3');
 		}
 
 		if (options.awsProfile) {

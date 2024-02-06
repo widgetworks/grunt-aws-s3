@@ -16,14 +16,6 @@ module.exports = function (grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
-		jshint: {
-			all: [
-				'tasks/*.js'
-			],
-			options: {
-				jshintrc: '.jshintrc',
-			},
-		},
 		aws_s3: {
 			test_local: {
 				options: {
