@@ -24,6 +24,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
+    "__description": "Before running tests, invoke the pretest script below (npm on Windows can't launch this, so you'll have to do it manually)",
     "xpretest": "./scripts/create_fixtures.sh",
     "test": "grunt"
   },
@@ -41,7 +42,7 @@
     "grunt-mocha-test": "^0.13.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-clean": "^2.0.1",
-    "@wiwo/mock-aws-s3": "^4.0.2-wiwo.1"
+    "@wiwo/mock-aws-s3": "^4.0.2-wiwo.2"
   },
   "peerDependencies": {
     "grunt": ">=0.4.0"
