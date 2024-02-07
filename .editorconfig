@@ -1,0 +1,13 @@
+[*]
+trim_trailing_whitespace = false
+
+[{*.json,*.js,*.ts,*.svg}]
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+# Matches the exact package.json, or *rc
+[{package.json,bower.json,*.yml,*rc}]
+indent_style = space
+indent_size = 2
