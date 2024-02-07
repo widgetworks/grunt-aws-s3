@@ -11,7 +11,6 @@
 var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
-var AWS = require('aws-sdk');
 var mime = require('mime-types');
 var _ = require('lodash');
 var async = require('async');
@@ -20,10 +19,43 @@ var Progress = require('progress');
 module.exports = function (grunt) {
 
 	grunt.registerMultiTask('aws_s3', 'Interact with AWS S3 using the AWS SDK', function () {
-
 		var done = this.async();
+		
+		let invoked = false;
+		function doneOnce(){
+			if (!invoked){
+				invoked = true;
+				done();
+			}
+		}
+		
+		runAwsS3.call(this, doneOnce);
+	});
 
+	async function runAwsS3(done){
 		var options = this.options({
+			async getAws(){
+				/*
+				NOTE: This is the minimum required setup to pass AWS to this task.
+				
+				This is required to make sure that this task is using the same AWS
+				instance as your hosting project. e.g. to make sure that any
+				authentication settings provided by the host are used by this library.
+				
+				You may customise this import process however you need, as long
+				as it returns the final AWS object.
+				
+				// esmodules (should be run inside an async function)
+				const AWS = import('aws-sdk');
+				// customise the AWS 
+				return AWS;
+				
+				// commonjs (can be a sync or async function)
+				const AWS = require('aws-sdk');
+				return AWS;
+				*/
+				throw new Error(`Missing required config: \`aws_s3.options.getAws: async function(){}\`. You must import and return the aws-sdk \`AWS\` library to be used by this task.`);
+			},
 			access: 'public-read',
 			accessKeyId: process.env.AWS_ACCESS_KEY_ID,
 			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -43,6 +75,15 @@ module.exports = function (grunt) {
 			changedFiles: 'aws_s3_changed',
 			compressionTypes: {'.br': 'br', '.gz': 'gzip'}
 		});
+		
+		/**
+		 * Widgetworks extension
+		 */
+		let AWS = await options.getAws();
+		if (!AWS){
+			throw new Error(`Expected aws-sdk AWS object but did not receive valid object. Ensure your \`aws_s3.getAws()\` function is importing and returning a valid module.`);
+		}
+		// End extension
 
 		// To deprecate
 		if (options.concurrency !== undefined) {
@@ -1044,7 +1085,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln();
 			});
 		}
-	});
+	}
 
 	var unixifyPath = function (filepath) {
 

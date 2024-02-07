@@ -17,6 +17,13 @@ module.exports = function (grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		aws_s3: {
+            options: {
+                getAws(){
+                    // Pass the AWS instance to be used for testing
+                    var AWS = require('aws-sdk');
+                    return AWS;
+                },
+            },
 			test_local: {
 				options: {
 					bucket: __dirname + '/test/local/bucket',
