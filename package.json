@@ -28,7 +28,7 @@
     "test": "grunt"
   },
   "dependencies": {
-    "aws-sdk": "2.0.x",
+    "aws-sdk": "2.1555.x",
     "mime-types": "2.0.x",
     "lodash": "4.17.x",
     "async": "0.9.x",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.2.0",
-    "grunt": "~0.4.0",
+    "grunt": "~1.6.1",
     "chai": "~1.7.2",
     "mocha": "~1.12.1",
     "grunt-mocha-test": "~0.10.2",
