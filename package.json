@@ -29,20 +29,20 @@
     "test": "grunt"
   },
   "dependencies": {
-    "mime-types": "2.0.x",
-    "lodash": "^4.17.21",
     "async": "0.9.x",
+    "lodash": "^4.17.21",
+    "mime-types": "2.0.x",
     "progress": "1.1.x"
   },
   "devDependencies": {
+    "@wiwo/mock-aws-s3": "^4.0.2-wiwo.2",
     "aws-sdk": "^2.1550.0",
-    "grunt": "^1.6.1",
     "chai": "^3.5.0",
-    "mocha": "^10.2.0",
-    "grunt-mocha-test": "^0.13.3",
-    "grunt-contrib-copy": "^1.0.0",
+    "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
-    "@wiwo/mock-aws-s3": "^4.0.2-wiwo.2"
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^10.2.0"
   },
   "peerDependencies": {
     "aws-sdk": "^2.1550.0",
