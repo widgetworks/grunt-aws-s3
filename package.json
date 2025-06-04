@@ -35,7 +35,7 @@
     "progress": "1.1.x"
   },
   "devDependencies": {
-    "aws-sdk": "^2.1550.0",
+    "aws-sdk": "^2.1692.0",
     "grunt": "^1.6.1",
     "chai": "^3.5.0",
     "mocha": "^10.2.0",
@@ -45,7 +45,7 @@
     "@wiwo/mock-aws-s3": "^4.0.2-wiwo.2"
   },
   "peerDependencies": {
-    "aws-sdk": "^2.1550.0",
+    "aws-sdk": "^2.1692.0",
     "grunt": ">=1.6.0"
   },
   "keywords": [
