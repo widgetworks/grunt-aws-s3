@@ -34,28 +34,6 @@ module.exports = function (grunt) {
 
 	async function runAwsS3(done){
 		var options = this.options({
-			async getAws(){
-				/*
-				NOTE: This is the minimum required setup to pass AWS to this task.
-				
-				This is required to make sure that this task is using the same AWS
-				instance as your hosting project. e.g. to make sure that any
-				authentication settings provided by the host are used by this library.
-				
-				You may customise this import process however you need, as long
-				as it returns the final AWS object.
-				
-				// esmodules (should be run inside an async function)
-				const AWS = import('aws-sdk');
-				// customise the AWS 
-				return AWS;
-				
-				// commonjs (can be a sync or async function)
-				const AWS = require('aws-sdk');
-				return AWS;
-				*/
-				throw new Error(`Missing required config: \`aws_s3.options.getAws: async function(){}\`. You must import and return the aws-sdk \`AWS\` library to be used by this task.`);
-			},
 			access: 'public-read',
 			accessKeyId: process.env.AWS_ACCESS_KEY_ID,
 			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -75,13 +53,11 @@ module.exports = function (grunt) {
 			changedFiles: 'aws_s3_changed',
 			compressionTypes: {'.br': 'br', '.gz': 'gzip'}
 		});
-		
 		/**
 		 * Widgetworks extension
 		 */
-		let AWS = await options.getAws();
-		if (!AWS){
-			throw new Error(`Expected aws-sdk AWS object but did not receive valid object. Ensure your \`aws_s3.getAws()\` function is importing and returning a valid module.`);
+		if(!options.awsCredential) {
+			grunt.fatal(`Must provide "aws_s3["${this.target}"].options.awsCredential" before running "${this.name}:${this.target}". "auth-s3:${this.target}" should be run first.`);
 		}
 		// End extension
 
@@ -97,16 +73,6 @@ module.exports = function (grunt) {
 			flipExclude: false,
 			exclude: false
 		};
-
-		// Replace the AWS SDK by the mock package if we're testing
-		if (options.mock) {
-			AWS = require('@wiwo/mock-aws-s3');
-		}
-
-		if (options.awsProfile) {
-			var credentials = new AWS.SharedIniFileCredentials({profile: options.awsProfile});
-			AWS.config.credentials = credentials;
-		}
 
 		if (['dots','progressBar','none'].indexOf(options.progress) < 0) {
 			grunt.log.writeln('Invalid progress option; defaulting to dots\n'.yellow);
@@ -126,19 +92,6 @@ module.exports = function (grunt) {
 				return put_params.includes(key);
 			});
 		};
-
-		var getObjectURL = function (file) {
-
-			file = file || '';
-			var prefix = ''
-
-			if (!options.mock) {
-				prefix = s3.endpoint.href
-			}
-
-			return prefix + options.bucket + '/' + file;
-		};
-
 		// Get the key URL relative to a path string
 		var getRelativeKeyPath = function (key, dest) {
 
@@ -161,7 +114,7 @@ module.exports = function (grunt) {
 		var hashFile = function (options, callback) {
 
 			if (options.stream) {
-				var local_stream = fs.ReadStream(options.file_path);
+				var local_stream = new fs.ReadStream(options.file_path);
 				var hash = crypto.createHash('md5');
 
 				local_stream.on('end', function () {
@@ -237,7 +190,8 @@ module.exports = function (grunt) {
 			bucket: options.bucket,
 			accessKeyId: options.accessKeyId,
 			secretAccessKey: options.secretAccessKey,
-			sessionToken: options.sessionToken
+			sessionToken: options.sessionToken,
+			credentials: options.awsCredential,
 		};
 
 		if (!options.region) {
@@ -260,7 +214,21 @@ module.exports = function (grunt) {
 		// Allow additional (not required) options
 		_.extend(s3_options, _.pick(options, ['maxRetries', 'sslEnabled', 'httpOptions', 'signatureVersion', 's3ForcePathStyle']));
 
-		var s3 = new AWS.S3(s3_options);
+		const { S3 } = require('@aws-sdk/client-s3');
+		
+		var s3 = new S3(s3_options);
+		const s3BaseUrl = `s3://${s3_options.region}/`;
+
+		const getObjectURL = function (file) {
+			file = file || '';
+			var prefix = '';
+
+			if (!options.mock) {
+				prefix = s3BaseUrl;
+			}
+
+			return prefix + options.bucket + '/' + file;
+		};
 
 		var dest;
 		var is_expanded;
@@ -1082,7 +1050,7 @@ module.exports = function (grunt) {
 					}
 				}
 
-				grunt.log.writeln();
+				grunt.log.writeln('');
 			});
 		}
 	}

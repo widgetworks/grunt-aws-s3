@@ -1,7 +1,7 @@
 {
   "name": "@wiwo/grunt-aws-s3",
   "description": "Interact with AWS S3 using the AWS SDK",
-  "version": "2.0.2-wiwo.2",
+  "version": "3.0.0",
   "homepage": "https://github.com/MathieuLoutre/grunt-aws-s3",
   "author": {
     "name": "Mathieu Triay",
@@ -35,8 +35,7 @@
     "progress": "1.1.x"
   },
   "devDependencies": {
-    "@wiwo/mock-aws-s3": "^4.0.2-wiwo.2",
-    "aws-sdk": "^2.1550.0",
+    "@aws-sdk/client-s3": "^3.823.0",
     "chai": "^3.5.0",
     "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
@@ -45,13 +44,18 @@
     "mocha": "^10.2.0"
   },
   "peerDependencies": {
-    "aws-sdk": "^2.1550.0",
-    "grunt": ">=1.6.0"
+    "@aws-sdk/client-s3": "^3.823.0",
+    "grunt": "^1.6.0"
   },
   "keywords": [
     "gruntplugin",
     "aws",
     "s3",
     "sdk"
-  ]
+  ],
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "license": "ISC"
 }
